@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Vulnerability Scanning System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="app-shell">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Cyber Safety School Project</p>
+                <h1>Website Vulnerability Scanning System</h1>
+                <p class="lead">A simple educational scanner for learning about website security basics.</p>
+            </div>
+            <nav class="nav-tabs" aria-label="Main navigation">
+                <button class="tab-button active" type="button" data-view="scanner">Scanner</button>
+                <button class="tab-button" type="button" data-view="reports">Reports</button>
+                <button class="tab-button" type="button" data-view="about">About</button>
+            </nav>
+        </header>
+
+        <section class="notice">
+            <strong>Important:</strong> This static version is for classroom learning only. It does not attack or test real websites.
+            It creates a safe practice report using common security checks.
+        </section>
+
+        <section class="view active" id="scanner-view">
+            <div class="layout-grid">
+                <section class="panel scan-panel">
+                    <div class="section-heading">
+                        <p class="eyebrow">Step 1</p>
+                        <h2>Run a Safe Demo Scan</h2>
+                    </div>
+
+                    <form id="scan-form">
+                        <label for="target">Target URL</label>
+                        <input id="target" name="target" type="url" placeholder="https://example.com" required>
+
+                        <fieldset class="check-grid">
+                            <legend>What should the demo scanner find?</legend>
+                            <label><input type="checkbox" name="issue" value="missingHeaders" checked> Missing security headers (+50)</label>
+                            <label><input type="checkbox" name="issue" value="robots" checked> Missing robots.txt and sitemap.xml (+8)</label>
+                            <label><input type="checkbox" name="issue" value="serverHeader"> Server technology visible (+4)</label>
+                            <label><input type="checkbox" name="issue" value="forms"> Weak form settings (+4)</label>
+                        </fieldset>
+
+                        <p class="helper-text">
+                            This is a safe classroom demo. The score changes when you change the selected findings or use an http:// URL.
+                        </p>
+
+                        <label class="confirm-row">
+                            <input id="acknowledge" type="checkbox" required>
+                            I confirm this is for authorized learning only.
+                        </label>
+
+                        <button class="primary-button" type="submit">Run Demo Scan</button>
+                    </form>
+                </section>
+
+                <aside class="panel score-card" aria-live="polite">
+                    <p class="eyebrow">Latest Result</p>
+                    <div id="score-ring" class="score-ring low">0</div>
+                    <h2 id="result-title">No scan yet</h2>
+                    <p id="result-summary" class="muted">Enter a URL and run a demo scan to create a report.</p>
+                    <p id="score-breakdown" class="score-breakdown">Score is based on selected demo findings.</p>
+                    <button id="open-latest" class="ghost-button" type="button" disabled>Open Latest Report</button>
+                </aside>
+            </div>
+
+            <section class="panel">
+                <div class="section-heading row-heading">
+                    <div>
+                        <p class="eyebrow">Step 2</p>
+                        <h2>Findings Preview</h2>
+                    </div>
+                    <span id="finding-count" class="pill">0 findings</span>
+                </div>
+                <div id="findings-list" class="findings-list empty-state">
+                    Run a scan to see security findings here.
+                </div>
+            </section>
+        </section>
+
+        <section class="view" id="reports-view">
+            <section class="panel">
+                <div class="section-heading row-heading">
+                    <div>
+                        <p class="eyebrow">Saved Work</p>
+                        <h2>Scan History</h2>
+                    </div>
+                    <button id="clear-history" class="ghost-button danger" type="button">Clear History</button>
+                </div>
+                <div id="history-list" class="history-list"></div>
+            </section>
+
+            <section class="panel report-detail" id="report-detail">
+                <p class="muted">Choose a report from the history list to view details.</p>
+            </section>
+        </section>
+
+        <section class="view" id="about-view">
+            <section class="panel about-panel">
+                <p class="eyebrow">How It Works</p>
+                <h2>Project Design</h2>
+                <div class="info-grid">
+                    <article>
+                        <h3>Input Validation</h3>
+                        <p>The app accepts only normal HTTP or HTTPS URLs so the project stays focused and safe.</p>
+                    </article>
+                    <article>
+                        <h3>Security Checks</h3>
+                        <p>It teaches headers, HTTPS, robots.txt, sitemap.xml, forms, and technology exposure.</p>
+                    </article>
+                    <article>
+                        <h3>Risk Score</h3>
+                        <p>High findings add 20 points, medium findings add 10, and low findings add 4.</p>
+                    </article>
+                    <article>
+                        <h3>Reports</h3>
+                        <p>Reports are saved in the browser and can be opened again from the history screen.</p>
+                    </article>
+                </div>
+            </section>
+        </section>
+
+        <footer class="footer">
+            <span>Website Vulnerability Scanning System</span>
+            <span>For authorized educational use only</span>
+        </footer>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
