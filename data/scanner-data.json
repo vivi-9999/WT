@@ -1,0 +1,105 @@
+{
+    "checks": {
+        "missingHeaders": [
+            {
+                "title": "Missing security header: content-security-policy",
+                "severity": "Medium",
+                "evidence": "Header not present in HTTP response.",
+                "recommendation": "Set a strict Content-Security-Policy header."
+            },
+            {
+                "title": "Missing security header: strict-transport-security",
+                "severity": "Medium",
+                "evidence": "Header not present in HTTP response.",
+                "recommendation": "Enable HSTS for HTTPS responses."
+            },
+            {
+                "title": "Missing security header: x-frame-options",
+                "severity": "Medium",
+                "evidence": "Header not present in HTTP response.",
+                "recommendation": "Set X-Frame-Options to DENY or SAMEORIGIN."
+            },
+            {
+                "title": "Missing security header: x-content-type-options",
+                "severity": "Medium",
+                "evidence": "Header not present in HTTP response.",
+                "recommendation": "Set X-Content-Type-Options to nosniff."
+            },
+            {
+                "title": "Missing security header: referrer-policy",
+                "severity": "Medium",
+                "evidence": "Header not present in HTTP response.",
+                "recommendation": "Set an appropriate Referrer-Policy."
+            }
+        ],
+        "robots": [
+            {
+                "title": "robots.txt missing or inaccessible",
+                "severity": "Low",
+                "evidence": "Unable to fetch robots.txt with successful status.",
+                "recommendation": "Add robots.txt for crawler guidance and security hygiene."
+            },
+            {
+                "title": "sitemap.xml missing or inaccessible",
+                "severity": "Low",
+                "evidence": "Unable to fetch sitemap.xml with successful status.",
+                "recommendation": "Publish sitemap.xml to improve controlled indexing."
+            }
+        ],
+        "serverHeader": [
+            {
+                "title": "Server header exposes technology",
+                "severity": "Low",
+                "evidence": "Server header shows a web server name or version.",
+                "recommendation": "Consider reducing server version disclosure in headers."
+            }
+        ],
+        "forms": [
+            {
+                "title": "Forms missing autocomplete guidance",
+                "severity": "Low",
+                "evidence": "No autocomplete attributes found in form fields.",
+                "recommendation": "Set suitable autocomplete values for form hardening and UX."
+            }
+        ]
+    },
+    "sampleReports": [
+        {
+            "id": "sample-001",
+            "target": "https://example.com",
+            "timestamp": "2026-04-26T18:19:16.000Z",
+            "risk_score": 58,
+            "summary": "Moderate risk findings detected.",
+            "findings": [
+                {
+                    "title": "Missing security header: content-security-policy",
+                    "severity": "Medium",
+                    "evidence": "Header not present in HTTP response.",
+                    "recommendation": "Set a strict Content-Security-Policy header."
+                },
+                {
+                    "title": "Missing security header: strict-transport-security",
+                    "severity": "Medium",
+                    "evidence": "Header not present in HTTP response.",
+                    "recommendation": "Enable HSTS for HTTPS responses."
+                },
+                {
+                    "title": "robots.txt missing or inaccessible",
+                    "severity": "Low",
+                    "evidence": "Unable to fetch robots.txt with successful status.",
+                    "recommendation": "Add robots.txt for crawler guidance and security hygiene."
+                }
+            ],
+            "integration": {
+                "nmap": "nmap -sV -Pn example.com",
+                "nikto": "nikto -h https://example.com",
+                "metasploit_hint": "msfconsole -q -x \"search type:auxiliary http; exit\"",
+                "note": "Manual lab use only. No automatic exploitation in this app."
+            },
+            "meta": {
+                "status_code": "Demo only",
+                "load_error": "Static HTML version does not contact the target website."
+            }
+        }
+    ]
+}
