@@ -2,6 +2,10 @@ require("dotenv").config();
 
 const pool = require("../db");
 const { migrate } = require("../db/migrate");
+const express = require("express");
+
+const app = express();
+app.use(express.json());
 
 // Migrate once at startup
 let migrated = false;
@@ -18,36 +22,23 @@ async function ensureMigrated() {
   }
 }
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// Mount routes
+app.use("/api/auth", require("../routes/auth"));
+app.use("/api/profile", require("../routes/profile"));
+app.use("/api/scan", require("../routes/scan"));
+
 module.exports = async (req, res) => {
   try {
     // Ensure database is migrated
     await ensureMigrated();
-
-    // Route handling
-    const { method, url } = req;
     
-    // Health check
-    if (method === 'GET' && url === '/health') {
-      return res.json({ status: "ok", timestamp: new Date().toISOString() });
-    }
-
-    // Route to appropriate handler
-    if (url.startsWith('/api/auth')) {
-      const authHandler = require("../routes/auth");
-      return authHandler(req, res);
-    }
-    if (url.startsWith('/api/profile')) {
-      const profileHandler = require("../routes/profile");
-      return profileHandler(req, res);
-    }
-    if (url.startsWith('/api/scan')) {
-      const scanHandler = require("../routes/scan");
-      return scanHandler(req, res);
-    }
-
-    // 404 for unknown routes
-    return res.status(404).json({ error: "Route not found" });
-
+    // Handle the request with Express app
+    return app(req, res);
   } catch (err) {
     console.error("[Perseus] API Error:", err);
     return res.status(500).json({ 
