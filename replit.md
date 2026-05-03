@@ -1,4 +1,4 @@
-# WVSS — Website Vulnerability Scanning System
+# Perseus — Website Vulnerability Scanning System
 
 ## Architecture
 

@@ -18,4 +18,4 @@ app.get("/dashboard", (req, res) => res.sendFile(path.join(__dirname, "public", 
 app.get("/setup", (req, res) => res.sendFile(path.join(__dirname, "public", "setup.html")));
 app.get("/{*path}", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 
-app.listen(PORT, "0.0.0.0", () => console.log(`WVSS server running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () => console.log(`Perseus server running on port ${PORT}`));
