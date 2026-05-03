@@ -24,8 +24,8 @@
       "destination": "/api/index.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/public/$1"
+      "source": "/((?!api).*)",
+      "destination": "/public/index.html"
     }
   ],
   "env": {
