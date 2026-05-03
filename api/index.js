@@ -2,31 +2,57 @@ require("dotenv").config();
 
 const pool = require("../db");
 const { migrate } = require("../db/migrate");
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-app.use("/api/auth", require("../routes/auth"));
-app.use("/api/profile", require("../routes/profile"));
-app.use("/api/scan", require("../routes/scan"));
-
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
-});
+// Migrate once at startup
+let migrated = false;
+async function ensureMigrated() {
+  if (!migrated) {
+    try {
+      await migrate(pool);
+      migrated = true;
+      console.log("[Perseus] Database migration completed");
+    } catch (err) {
+      console.error("[Perseus] Database migration failed:", err.message);
+      throw err;
+    }
+  }
+}
 
 module.exports = async (req, res) => {
-  // Ensure database is migrated
   try {
-    await migrate(pool);
-  } catch (err) {
-    console.error("[Perseus] Database migration failed:", err.message);
-    return res.status(500).json({ error: "Database migration failed" });
-  }
+    // Ensure database is migrated
+    await ensureMigrated();
 
-  return app(req, res);
+    // Route handling
+    const { method, url } = req;
+    
+    // Health check
+    if (method === 'GET' && url === '/health') {
+      return res.json({ status: "ok", timestamp: new Date().toISOString() });
+    }
+
+    // Route to appropriate handler
+    if (url.startsWith('/api/auth')) {
+      const authHandler = require("../routes/auth");
+      return authHandler(req, res);
+    }
+    if (url.startsWith('/api/profile')) {
+      const profileHandler = require("../routes/profile");
+      return profileHandler(req, res);
+    }
+    if (url.startsWith('/api/scan')) {
+      const scanHandler = require("../routes/scan");
+      return scanHandler(req, res);
+    }
+
+    // 404 for unknown routes
+    return res.status(404).json({ error: "Route not found" });
+
+  } catch (err) {
+    console.error("[Perseus] API Error:", err);
+    return res.status(500).json({ 
+      error: "Internal server error",
+      message: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
 };
