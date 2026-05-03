@@ -12,7 +12,7 @@ async function migrate(pool) {
 
         await client.query(`
             CREATE TABLE IF NOT EXISTS users (
-                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                id UUID PRIMARY KEY,
                 email TEXT NOT NULL UNIQUE,
                 password_hash TEXT NOT NULL,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -33,7 +33,7 @@ async function migrate(pool) {
 
         await client.query(`
             CREATE TABLE IF NOT EXISTS scan_reports (
-                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                id UUID PRIMARY KEY,
                 user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                 target_url TEXT NOT NULL,
                 risk_score INTEGER NOT NULL,
