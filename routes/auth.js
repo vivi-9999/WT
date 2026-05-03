@@ -1,8 +1,10 @@
 const express = require("express");
+const { randomUUID } = require("crypto");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const pool = require("../db");
+const { dbFailureMessage, dbFailureStatus } = require("../utils/dbErrors");
 
 const JWT_SECRET = process.env.JWT_SECRET || "wvss-jwt-secret-change-in-production";
 const JWT_EXPIRES = "7d";
@@ -18,16 +20,22 @@ router.post("/register", async (req, res) => {
         if (exists.rows.length > 0) return res.status(409).json({ error: "An account with this email already exists." });
 
         const hash = await bcrypt.hash(password, 12);
+        const userId = randomUUID();
         const result = await pool.query(
-            "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id, email",
-            [email.toLowerCase(), hash]
+            "INSERT INTO users (id, email, password_hash) VALUES ($1, $2, $3) RETURNING id, email",
+            [userId, email.toLowerCase(), hash]
         );
         const user = result.rows[0];
         const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
         res.status(201).json({ token, userId: user.id, needsProfile: true });
     } catch (err) {
         console.error("Register error:", err);
-        res.status(500).json({ error: "Registration failed. Please try again." });
+        if (err.code === "23505") {
+            return res.status(409).json({ error: "An account with this email already exists." });
+        }
+        const status = dbFailureStatus(err);
+        const error = dbFailureMessage(err, "Registration failed. Please try again.");
+        res.status(status).json({ error });
     }
 });
 
@@ -50,7 +58,9 @@ router.post("/login", async (req, res) => {
         res.json({ token, userId: user.id, needsProfile: !user.display_name });
     } catch (err) {
         console.error("Login error:", err);
-        res.status(500).json({ error: "Login failed. Please try again." });
+        const status = dbFailureStatus(err);
+        const error = dbFailureMessage(err, "Login failed. Please try again.");
+        res.status(status).json({ error });
     }
 });
 

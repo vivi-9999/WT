@@ -1,0 +1,19 @@
+[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K[41m[1m ERROR [22m[49m Cannot copy server address to clipboard: Couldn't find the `xsel` binary and fallback didn't work. On Debian/Ubuntu you can install xsel with: sudo apt install xsel.
+[32m[39m
+[32m   ┌───────────────────────────────────────────┐[39m
+   [32m│[39m                                           [32m│[39m
+   [32m│[39m   [32mServing![39m                                [32m│[39m
+   [32m│[39m                                           [32m│[39m
+   [32m│[39m   [1m- Local:[22m    http://localhost:5000       [32m│[39m
+   [32m│[39m   [1m- Network:[22m  http://172.31.71.130:5000   [32m│[39m
+   [32m│[39m                                           [32m│[39m
+[32m   └───────────────────────────────────────────┘[39m
+[32m[39m
+[44m[1m HTTP [22m[49m [2m5/3/2026 10:19:10 AM[22m [33m127.0.0.1[39m [36mGET /[39m
+[44m[1m HTTP [22m[49m [2m5/3/2026 10:19:10 AM[22m [33m127.0.0.1[39m [32mReturned 200 in 181 ms[39m
+[44m[1m HTTP [22m[49m [2m5/3/2026 10:19:11 AM[22m [33m127.0.0.1[39m [36mGET /styles.css[39m
+[44m[1m HTTP [22m[49m [2m5/3/2026 10:19:11 AM[22m [33m127.0.0.1[39m [32mReturned 200 in 3 ms[39m
+[44m[1m HTTP [22m[49m [2m5/3/2026 10:19:11 AM[22m [33m127.0.0.1[39m [36mGET /app.js[39m
+[44m[1m HTTP [22m[49m [2m5/3/2026 10:19:11 AM[22m [33m127.0.0.1[39m [32mReturned 200 in 2 ms[39m
+[44m[1m HTTP [22m[49m [2m5/3/2026 10:19:11 AM[22m [33m127.0.0.1[39m [36mGET /data/scanner-data.json[39m
+[44m[1m HTTP [22m[49m [2m5/3/2026 10:19:11 AM[22m [33m127.0.0.1[39m [32mReturned 200 in 2 ms[39m

@@ -1,6 +1,17 @@
 const token = localStorage.getItem("wvss_token");
 if (!token) window.location.href = "/";
 
+(async function skipIfProfileComplete() {
+    try {
+        const res = await fetch("/api/auth/me", {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) return;
+        const user = await res.json();
+        if (user.display_name) window.location.href = "/dashboard";
+    } catch {}
+})();
+
 let selectedColor = "#2563eb";
 
 document.querySelectorAll(".color-swatch").forEach(swatch => {
@@ -30,6 +41,16 @@ function showError(msg) {
     el.style.display = "block";
 }
 
+async function readJsonBody(res) {
+    const text = await res.text();
+    if (!text) return {};
+    try {
+        return JSON.parse(text);
+    } catch {
+        return { error: `Server error (${res.status}). Please try again.` };
+    }
+}
+
 document.getElementById("setup-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const btn = document.getElementById("setup-btn");
@@ -48,7 +69,13 @@ document.getElementById("setup-form").addEventListener("submit", async (e) => {
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify({ display_name, organization, role, avatar_color: selectedColor })
         });
-        const data = await res.json();
+        const data = await readJsonBody(res);
+        if (res.status === 401) {
+            localStorage.removeItem("wvss_token");
+            localStorage.removeItem("wvss_user_id");
+            window.location.href = "/";
+            return;
+        }
         if (!res.ok) throw new Error(data.error || "Failed to save profile.");
         window.location.href = "/dashboard";
     } catch (err) {

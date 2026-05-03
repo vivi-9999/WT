@@ -25,6 +25,16 @@ function hideMessages() {
     document.getElementById("success-msg").style.display = "none";
 }
 
+async function readJsonBody(res) {
+    const text = await res.text();
+    if (!text) return {};
+    try {
+        return JSON.parse(text);
+    } catch {
+        return { error: `Server error (${res.status}). Is the API running on the same host?` };
+    }
+}
+
 function setLoading(btnId, loading) {
     const btn = document.getElementById(btnId);
     btn.disabled = loading;
@@ -44,7 +54,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
         });
-        const data = await res.json();
+        const data = await readJsonBody(res);
         if (!res.ok) throw new Error(data.error || "Login failed.");
         localStorage.setItem("wvss_token", data.token);
         localStorage.setItem("wvss_user_id", data.userId);
@@ -70,7 +80,7 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
         });
-        const data = await res.json();
+        const data = await readJsonBody(res);
         if (!res.ok) throw new Error(data.error || "Registration failed.");
         localStorage.setItem("wvss_token", data.token);
         localStorage.setItem("wvss_user_id", data.userId);
@@ -82,6 +92,22 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
     }
 });
 
-if (localStorage.getItem("wvss_token")) {
-    window.location.href = "/dashboard";
-}
+(async function redirectIfLoggedIn() {
+    const token = localStorage.getItem("wvss_token");
+    if (!token) return;
+    try {
+        const res = await fetch("/api/auth/me", {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.status === 401) {
+            localStorage.removeItem("wvss_token");
+            localStorage.removeItem("wvss_user_id");
+            return;
+        }
+        const user = await res.json();
+        window.location.href = user.display_name ? "/dashboard" : "/setup";
+    } catch {
+        localStorage.removeItem("wvss_token");
+        localStorage.removeItem("wvss_user_id");
+    }
+})();

@@ -39,6 +39,10 @@ async function loadUserInfo() {
         const res = await api("/api/auth/me");
         if (!res) return;
         const user = await res.json();
+        if (!user.display_name) {
+            window.location.href = "/setup";
+            return;
+        }
         const initials = getInitials(user.display_name || user.email);
         const color = user.avatar_color || "#2563eb";
         document.getElementById("top-avatar").textContent = initials;
@@ -603,6 +607,7 @@ function downloadLogs(report) {
 async function loadProfile() {
     try {
         const [userRes, histRes] = await Promise.all([api("/api/auth/me"), api("/api/scan/history")]);
+        if (!userRes || !histRes) return;
         const user = await userRes.json();
         const history = await histRes.json();
         const initials = getInitials(user.display_name || user.email);

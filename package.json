@@ -4,12 +4,13 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "vercel-build": "echo 'Build completed'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Website Vulnerability Scanning System",
   "dependencies": {
     "axios": "^1.16.0",
     "bcryptjs": "^3.0.3",
@@ -21,7 +22,7 @@
     "jsonwebtoken": "^9.0.3",
     "node-fetch": "^3.3.2",
     "pg": "^8.20.0",
-    "tls": "^0.0.1",
+    "pg-mem": "^3.0.14",
     "uuid": "^14.0.0"
   }
 }

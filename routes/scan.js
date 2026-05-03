@@ -1,4 +1,5 @@
 const express = require("express");
+const { randomUUID } = require("crypto");
 const router = express.Router();
 const pool = require("../db");
 const { scanUrl } = require("../scanner/engine");
@@ -11,11 +12,20 @@ router.post("/", requireAuth, async (req, res) => {
     try {
         const result = await scanUrl(url.trim());
 
+        const reportId = randomUUID();
         const saved = await pool.query(
-            `INSERT INTO scan_reports (user_id, target_url, risk_score, grade, summary, findings, scan_meta)
-             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, created_at`,
-            [req.userId, result.targetUrl, result.riskScore, result.grade, result.summary,
-             JSON.stringify(result.findings), JSON.stringify({ ...result.scanMeta, categoryScores: result.categoryScores })]
+            `INSERT INTO scan_reports (id, user_id, target_url, risk_score, grade, summary, findings, scan_meta)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, created_at`,
+            [
+                reportId,
+                req.userId,
+                result.targetUrl,
+                result.riskScore,
+                result.grade,
+                result.summary,
+                JSON.stringify(result.findings || []),
+                JSON.stringify({ ...result.scanMeta, categoryScores: result.categoryScores })
+            ]
         );
 
         res.json({ ...result, id: saved.rows[0].id, created_at: saved.rows[0].created_at });
@@ -45,7 +55,25 @@ router.get("/:id", requireAuth, async (req, res) => {
             [req.params.id, req.userId]
         );
         if (result.rows.length === 0) return res.status(404).json({ error: "Report not found." });
-        res.json(result.rows[0]);
+        const row = result.rows[0];
+
+        if (typeof row.scan_meta === "string") {
+            try {
+                row.scan_meta = JSON.parse(row.scan_meta);
+            } catch {}
+        }
+
+        if (typeof row.findings === "string") {
+            try {
+                row.findings = JSON.parse(row.findings);
+            } catch {}
+        }
+
+        if (!Array.isArray(row.findings)) {
+            row.findings = row.findings ? [row.findings] : [];
+        }
+
+        res.json(row);
     } catch (err) {
         res.status(500).json({ error: "Failed to fetch report." });
     }
