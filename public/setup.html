@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Up Your Profile — WVSS</title>
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-card setup-card">
+            <div class="auth-brand">
+                <div class="brand-icon">👤</div>
+                <h1>Build Your Profile</h1>
+                <p class="brand-sub">Tell us a bit about yourself to get started.</p>
+            </div>
+
+            <div id="error-msg" class="error-banner" style="display:none"></div>
+
+            <form id="setup-form" class="auth-form">
+                <div class="form-group">
+                    <label>Choose Avatar Color</label>
+                    <div class="color-picker" id="color-picker">
+                        <button type="button" class="color-swatch active" data-color="#2563eb" style="background:#2563eb"></button>
+                        <button type="button" class="color-swatch" data-color="#16a34a" style="background:#16a34a"></button>
+                        <button type="button" class="color-swatch" data-color="#dc2626" style="background:#dc2626"></button>
+                        <button type="button" class="color-swatch" data-color="#9333ea" style="background:#9333ea"></button>
+                        <button type="button" class="color-swatch" data-color="#ea580c" style="background:#ea580c"></button>
+                        <button type="button" class="color-swatch" data-color="#0891b2" style="background:#0891b2"></button>
+                        <button type="button" class="color-swatch" data-color="#be185d" style="background:#be185d"></button>
+                        <button type="button" class="color-swatch" data-color="#854d0e" style="background:#854d0e"></button>
+                    </div>
+                    <div class="avatar-preview" id="avatar-preview" style="background:#2563eb">
+                        <span id="avatar-initials">?</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="display-name">Display Name <span class="required">*</span></label>
+                    <input type="text" id="display-name" placeholder="e.g. Alex Chen" required minlength="2" maxlength="100" autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="organization">Organization / School <span class="optional">(optional)</span></label>
+                    <input type="text" id="organization" placeholder="e.g. MIT, CyberSec Labs" maxlength="150">
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Your Role <span class="optional">(optional)</span></label>
+                    <select id="role">
+                        <option value="">Select a role…</option>
+                        <option value="Student">Student</option>
+                        <option value="Security Researcher">Security Researcher</option>
+                        <option value="Developer">Developer</option>
+                        <option value="IT Administrator">IT Administrator</option>
+                        <option value="Penetration Tester">Penetration Tester</option>
+                        <option value="Instructor">Instructor</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="primary-btn" id="setup-btn">
+                    <span class="btn-text">Complete Setup →</span>
+                    <span class="btn-loader" style="display:none">Saving…</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    <script src="/js/setup.js"></script>
+</body>
+</html>

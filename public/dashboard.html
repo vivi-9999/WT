@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — WVSS</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        <span class="brand-icon">🔐</span>
+        <div>
+            <div>WVSS</div>
+            <div class="brand-sub">Website Vulnerability Scanning System</div>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <div class="avatar-chip">
+            <div class="avatar-circle" id="top-avatar">?</div>
+            <span class="avatar-name" id="top-name">Loading…</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Sign Out</button>
+    </div>
+</header>
+
+<nav class="nav-tabs">
+    <button class="nav-tab active" data-view="scanner">🔍 Scanner</button>
+    <button class="nav-tab" data-view="results">📊 Results</button>
+    <button class="nav-tab" data-view="history">📁 History</button>
+    <button class="nav-tab" data-view="profile">👤 Profile</button>
+</nav>
+
+<!-- SCANNER VIEW -->
+<div class="view active" id="scanner-view">
+    <div class="container">
+        <div class="page-header">
+            <h2>Run a Security Scan</h2>
+            <p>Enter any website URL to perform a real security analysis of its headers, SSL, cookies, and configuration.</p>
+        </div>
+
+        <div class="notice info">
+            <strong>Live Scanner:</strong> This tool makes real HTTP requests to check security headers, SSL certificates, HTTPS enforcement, cookie flags, CORS, and more. Only scan websites you own or have explicit permission to test.
+        </div>
+
+        <div class="panel">
+            <form id="scan-form" class="scan-form">
+                <div class="url-input-wrap">
+                    <label for="scan-url">Target URL</label>
+                    <input type="text" id="scan-url" class="url-input" placeholder="https://example.com" autocomplete="off" required>
+                </div>
+                <button type="submit" class="scan-btn" id="scan-btn">
+                    <span id="scan-btn-text">▶ Scan Now</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="panel scanning-overlay" id="scanning-overlay">
+            <div class="spinner"></div>
+            <p style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:8px">Scanning target…</p>
+            <p style="font-size:13px;color:#64748b" id="scan-status-msg">Establishing connection…</p>
+            <div class="scanning-steps">
+                <div class="scan-step" id="step-1">⟳ Checking HTTPS and SSL certificate…</div>
+                <div class="scan-step" id="step-2">⟳ Analyzing security headers…</div>
+                <div class="scan-step" id="step-3">⟳ Checking cookie security flags…</div>
+                <div class="scan-step" id="step-4">⟳ Testing robots.txt and sitemap.xml…</div>
+                <div class="scan-step" id="step-5">⟳ Checking information disclosure…</div>
+                <div class="scan-step" id="step-6">✓ Generating security report…</div>
+            </div>
+        </div>
+
+        <div id="scan-error" class="notice warn" style="display:none"></div>
+
+        <div id="scan-placeholder" class="panel empty-state">
+            <div class="es-icon">🛡️</div>
+            <p>Enter a URL above and click <strong>Scan Now</strong> to begin a real security analysis.</p>
+        </div>
+    </div>
+</div>
+
+<!-- RESULTS VIEW -->
+<div class="view" id="results-view">
+    <div class="container" id="results-container">
+        <div class="panel empty-state">
+            <div class="es-icon">📊</div>
+            <p>Run a scan to see detailed results and charts here.</p>
+        </div>
+    </div>
+</div>
+
+<!-- HISTORY VIEW -->
+<div class="view" id="history-view">
+    <div class="container">
+        <div class="page-header" style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+                <h2>Scan History</h2>
+                <p>All scans you've performed — click a row to view full results.</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+                <input type="text" class="search-input" id="history-search" placeholder="Search URL…" oninput="filterHistory()">
+                <select class="filter-select" id="history-grade-filter" onchange="filterHistory()">
+                    <option value="">All Grades</option>
+                    <option value="A+">A+</option><option value="A">A</option>
+                    <option value="B">B</option><option value="C">C</option>
+                    <option value="D">D</option><option value="F">F</option>
+                </select>
+            </div>
+        </div>
+        <div class="panel" id="history-panel">
+            <div class="empty-state"><div class="es-icon">📭</div><p>No scans yet. Run your first scan to build your history.</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- PROFILE VIEW -->
+<div class="view" id="profile-view">
+    <div class="container">
+        <div class="page-header">
+            <h2>Your Profile</h2>
+        </div>
+        <div class="panel" id="profile-panel">
+            <p style="color:#64748b">Loading profile…</p>
+        </div>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

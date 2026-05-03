@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WVSS — Website Vulnerability Scanning System</title>
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-brand">
+                <div class="brand-icon">🔐</div>
+                <h1>WVSS</h1>
+                <p class="brand-sub">Website Vulnerability Scanning System</p>
+            </div>
+
+            <div class="tab-switcher">
+                <button class="tab-btn active" id="login-tab" onclick="switchTab('login')">Sign In</button>
+                <button class="tab-btn" id="register-tab" onclick="switchTab('register')">Create Account</button>
+            </div>
+
+            <div id="error-msg" class="error-banner" style="display:none"></div>
+            <div id="success-msg" class="success-banner" style="display:none"></div>
+
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Your password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="primary-btn" id="login-btn">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader" style="display:none">Signing in…</span>
+                </button>
+            </form>
+
+            <form id="register-form" class="auth-form" style="display:none">
+                <div class="form-group">
+                    <label for="reg-email">Email Address</label>
+                    <input type="email" id="reg-email" placeholder="you@example.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="At least 8 characters" required autocomplete="new-password" minlength="8">
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm">Confirm Password</label>
+                    <input type="password" id="reg-confirm" placeholder="Repeat your password" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="primary-btn" id="register-btn">
+                    <span class="btn-text">Create Account</span>
+                    <span class="btn-loader" style="display:none">Creating…</span>
+                </button>
+            </form>
+
+            <p class="auth-note">For authorized educational and security research use only.</p>
+        </div>
+    </div>
+    <script src="/js/auth.js"></script>
+</body>
+</html>
