@@ -44,23 +44,36 @@ router.post("/login", async (req, res) => {
     if (!email || !password) return res.status(400).json({ error: "Email and password are required." });
 
     try {
+        console.log("Login attempt for:", email.toLowerCase());
+        
         const result = await pool.query(
-            "SELECT u.id, u.email, u.password_hash, p.display_name FROM users u LEFT JOIN profiles p ON p.user_id = u.id WHERE u.email = $1",
+            "SELECT id, email, password_hash FROM users WHERE email = $1",
             [email.toLowerCase()]
         );
-        if (result.rows.length === 0) return res.status(401).json({ error: "Invalid email or password." });
+        
+        console.log("User found:", result.rows.length > 0);
+        
+        if (result.rows.length === 0) {
+            return res.status(401).json({ error: "Invalid email or password." });
+        }
 
         const user = result.rows[0];
+        console.log("Comparing password for user:", user.id);
+        
         const valid = await bcrypt.compare(password, user.password_hash);
-        if (!valid) return res.status(401).json({ error: "Invalid email or password." });
+        console.log("Password valid:", valid);
+        
+        if (!valid) {
+            return res.status(401).json({ error: "Invalid email or password." });
+        }
 
         const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
-        res.json({ token, userId: user.id, needsProfile: !user.display_name });
+        console.log("Login successful for:", user.id);
+        
+        res.json({ token, userId: user.id, needsProfile: true });
     } catch (err) {
         console.error("Login error:", err);
-        const status = dbFailureStatus(err);
-        const error = dbFailureMessage(err, "Login failed. Please try again.");
-        res.status(status).json({ error });
+        res.status(500).json({ error: "Login failed. Please try again." });
     }
 });
 
