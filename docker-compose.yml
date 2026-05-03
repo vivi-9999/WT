@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: perseus
+      POSTGRES_PASSWORD: perseus
+      POSTGRES_DB: perseus
+    ports:
+      - "5432:5432"
+    volumes:
+      - perseus_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U perseus -d perseus"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  perseus_pg:

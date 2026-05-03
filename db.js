@@ -1,10 +1,34 @@
 const { Pool } = require("pg");
+const { newDb, DataType } = require("pg-mem");
+const { randomUUID } = require("crypto");
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes("sslmode=require")
-        ? { rejectUnauthorized: false }
-        : false
-});
+function createMemoryPool() {
+    const mem = newDb();
+    mem.public.registerFunction({
+        name: "gen_random_uuid",
+        args: [],
+        returns: DataType.uuid,
+        implementation: () => randomUUID()
+    });
+    const { Pool: MemPool } = mem.adapters.createPg();
+    return new MemPool();
+}
+
+const url = process.env.DATABASE_URL?.trim();
+const useSsl =
+    url &&
+    (url.includes("sslmode=require") ||
+        url.includes("neon.tech") ||
+        url.includes("supabase.co"));
+
+let pool = null;
+if (!url || url.toLowerCase() === "memory") {
+    pool = createMemoryPool();
+} else if (url) {
+    pool = new Pool({
+        connectionString: url,
+        ssl: useSsl ? { rejectUnauthorized: false } : false
+    });
+}
 
 module.exports = pool;
